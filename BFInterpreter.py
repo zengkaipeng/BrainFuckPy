@@ -56,7 +56,7 @@ def Eval(MemPool, Code, input_buffer):
                 MemPool[MemPool[0]] = input_buffer[input_pos]
                 input_pos += 1
         else:
-            print('%c' % chr(MemPool[MemPool[0]]))
+            print('%c' % chr(MemPool[MemPool[0]]), end='')
         code_pos += 1
 
     return 0
