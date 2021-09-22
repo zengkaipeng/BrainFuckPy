@@ -13,20 +13,51 @@ def Format_Code(Code):
     Codelist = [x for x in Code if x in charset]
     return ''.join(Codelist)
 
+def Brackets_Check(Code):
+    left_cnt = 0
+    for x in Code:
+        left_cnt += 1 if x == '[' else 0
+        left_cnt -= 1 if x == ']' else 0
+        if left_cnt < 0:
+            return False
+    return left_cnt != 0
 
-def Eval(init_pos, curr_pos, MemPool, Code, input_buffer, input_pos):
-    if MemPool[0] < 0 or MemPool[0] > len(MemPool):
-        raise MemIdxOutofRange(
-            f"[Error] {len(MemPool)} bytes of Memory Allocated" + \
-            f"Index {MemPool[0]} out of Range"
-        )
 
-    if curr_pos >= len(Code):
-        return 0
+def Eval(MemPool, Code, input_buffer):
+    left_barckets_pos, input_pos = [], 0
+    while code_pos < len(Code):
+        if MemPool[0] <= 0 or MemPool[0] > len(MemPool):
+            raise MemIdxOutofRange(
+                f"[Error] {len(MemPool)} bytes of Memory Allocated" + \
+                f"Index {MemPool[0]} out of Range"
+            )
+        if Code[code_pos] == '[':
+            left_barckets_pos.append(code_pos)
+        elif Code[code_pos] == ']':
+            if MemPool[MemPool[0]] == 0:
+                left_barckets_pos.pop()
+            else:
+                code_pos = left_barckets_pos[-1]
+        elif Code[code_pos] == '+':
+            MemPool[MemPool[0]] = (MemPool[MemPool[0]] + 1) & 255
+        elif Code[code_pos] == '-':
+            MemPool[MemPool[0]] = (MemPool[MemPool[0]] + 255) & 255
+        elif Code[code_pos] == '<':
+            MemPool[0] -= 1
+        elif Code[code_pos] == '>':
+            MemPool[0] += 1
+        
+        elif Code[code_pos] == ',':
+            if input_pos >= len(input_buffer):
+                return -1
+            else:
+                MemPool[MemPool[0]] = input_buffer[input_pos]
+                input_pos += 1
+        else:
+            print('%c' % chr(MemPool[MemPool[0]]))
+        code_pos += 1
 
-    if input_pos >= len(input_buffer):
-        return -1
-    
+    return 0
 
 
 
@@ -76,11 +107,14 @@ if __name__ == '__main__':
         program_input = Fin.read()
     
     formatted_code = Format_Code(original_code)
+    if not Brackets_Check(formatted_code):
+        print('[Error] Brackets do not match')
+        exit(0)
 
-    mempool = [0 for i in range(args.memory + 1)]
+    mempool = [1] + [0 for i in range(args.memory)]
 
     try:
-        return_code = Eval(0, 0, mempool, formatted_code, program_input, 0)
+        return_code = Eval(mempool, formatted_code, program_input)
         if return_code == -1:
             print('[INFO] Input Content is Used Up. Prog Terminated.')
     except Exception as e:
