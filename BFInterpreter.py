@@ -13,6 +13,7 @@ def Format_Code(Code):
     Codelist = [x for x in Code if x in charset]
     return ''.join(Codelist)
 
+
 def Brackets_Check(Code):
     left_cnt = 0
     for x in Code:
@@ -20,15 +21,16 @@ def Brackets_Check(Code):
         left_cnt -= 1 if x == ']' else 0
         if left_cnt < 0:
             return False
-    return left_cnt != 0
+    return left_cnt == 0
 
 
 def Eval(MemPool, Code, input_buffer):
-    left_barckets_pos, input_pos = [], 0
+    left_barckets_pos = []
+    code_pos, input_pos = 0, 0
     while code_pos < len(Code):
         if MemPool[0] <= 0 or MemPool[0] > len(MemPool):
             raise MemIdxOutofRange(
-                f"[Error] {len(MemPool)} bytes of Memory Allocated" + \
+                f"[Error] {len(MemPool)} bytes of Memory Allocated" +
                 f"Index {MemPool[0]} out of Range"
             )
         if Code[code_pos] == '[':
@@ -46,7 +48,7 @@ def Eval(MemPool, Code, input_buffer):
             MemPool[0] -= 1
         elif Code[code_pos] == '>':
             MemPool[0] += 1
-        
+
         elif Code[code_pos] == ',':
             if input_pos >= len(input_buffer):
                 return -1
@@ -58,11 +60,6 @@ def Eval(MemPool, Code, input_buffer):
         code_pos += 1
 
     return 0
-
-
-
-
-
 
 
 if __name__ == '__main__':
@@ -90,7 +87,7 @@ if __name__ == '__main__':
             ' Shanghai Jiao Tong University'
         print('%s\n' % (content_name))
         exit(0)
-    
+
     if args.memory <= 0:
         print('[Error] Size of Allocated Memory should be positive')
         exit(0)
@@ -99,13 +96,12 @@ if __name__ == '__main__':
         print('[Error] Input or Source does not Exist')
         exit(0)
 
-
     with open(args.bf) as Fin:
         original_code = Fin.read()
 
     with open(args.input) as Fin:
         program_input = Fin.read()
-    
+
     formatted_code = Format_Code(original_code)
     if not Brackets_Check(formatted_code):
         print('[Error] Brackets do not match')
@@ -119,4 +115,3 @@ if __name__ == '__main__':
             print('[INFO] Input Content is Used Up. Prog Terminated.')
     except Exception as e:
         print(e)
-
