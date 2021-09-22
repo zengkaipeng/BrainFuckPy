@@ -53,7 +53,7 @@ def Eval(MemPool, Code, input_buffer):
             if input_pos >= len(input_buffer):
                 return -1
             else:
-                MemPool[MemPool[0]] = input_buffer[input_pos]
+                MemPool[MemPool[0]] = ord(input_buffer[input_pos])
                 input_pos += 1
         else:
             print('%c' % chr(MemPool[MemPool[0]]), end='')
