@@ -30,8 +30,8 @@ def Eval(MemPool, Code, input_buffer):
     while code_pos < len(Code):
         if MemPool[0] <= 0 or MemPool[0] > len(MemPool):
             raise MemIdxOutofRange(
-                f"[Error] {len(MemPool)} bytes of Memory Allocated" +
-                f"Index {MemPool[0]} out of Range"
+                f"[Error] Index {MemPool[0]} out of Mem Idx Range" +\
+                f" [1, {len(MemPool) - 1}]"
             )
         if Code[code_pos] == '[':
             if MemPool[MemPool[0]] != 0:
