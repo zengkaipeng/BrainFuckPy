@@ -126,6 +126,6 @@ if __name__ == '__main__':
     try:
         return_code = Eval(mempool, formatted_code, program_input)
         if return_code == -1:
-            print('[INFO] Input Content is Used Up. Prog Terminated.')
+            print('\n[INFO] Input Content is Used Up. Prog Terminated.')
     except Exception as e:
         print(e)
