@@ -34,18 +34,29 @@ def Eval(MemPool, Code, input_buffer):
                 f"Index {MemPool[0]} out of Range"
             )
         if Code[code_pos] == '[':
-            left_barckets_pos.append(code_pos)
-        elif Code[code_pos] == ']':
-            if MemPool[MemPool[0]] == 0:
-                left_barckets_pos.pop()
+            if MemPool[MemPool[0]] != 0:
+                left_barckets_pos.append(code_pos)
             else:
-                code_pos = left_barckets_pos[-1]
+                left_barckets_cnt = 0
+                while code_pos < len(Code):
+                    left_barckets_cnt += 1 if Code[code_pos] == '[' else 0
+                    left_barckets_cnt -= 1 if Code[code_pos] == ']' else 0
+                    if left_barckets_cnt == 0:
+                        break
+                    code_pos += 1
+
+        elif Code[code_pos] == ']':
+            code_pos = left_barckets_pos.pop() - 1
+
         elif Code[code_pos] == '+':
             MemPool[MemPool[0]] = (MemPool[MemPool[0]] + 1) & 255
+
         elif Code[code_pos] == '-':
             MemPool[MemPool[0]] = (MemPool[MemPool[0]] + 255) & 255
+
         elif Code[code_pos] == '<':
             MemPool[0] -= 1
+
         elif Code[code_pos] == '>':
             MemPool[0] += 1
 
@@ -58,6 +69,7 @@ def Eval(MemPool, Code, input_buffer):
         else:
             print('%c' % chr(MemPool[MemPool[0]]), end='')
         code_pos += 1
+        # print(code_pos, MemPool)
 
     return 0
 
@@ -103,6 +115,8 @@ if __name__ == '__main__':
         program_input = Fin.read()
 
     formatted_code = Format_Code(original_code)
+    # print(formatted_code)
+
     if not Brackets_Check(formatted_code):
         print('[Error] Brackets do not match')
         exit(0)
