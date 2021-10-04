@@ -28,9 +28,9 @@ def Eval(MemPool, Code, input_buffer):
     left_barckets_pos = []
     code_pos, input_pos = 0, 0
     while code_pos < len(Code):
-        if MemPool[0] <= 0 or MemPool[0] > len(MemPool):
+        if MemPool[0] <= 0 or MemPool[0] >= len(MemPool):
             raise MemIdxOutofRange(
-                f"[Error] Index {MemPool[0]} out of Mem Idx Range" +\
+                f"[Error] Index {MemPool[0]} out of Mem Idx Range" +
                 f" [1, {len(MemPool) - 1}]"
             )
         if Code[code_pos] == '[':
